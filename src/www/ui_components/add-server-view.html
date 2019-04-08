@@ -245,7 +245,9 @@
         }
       },
       _addDetectedServer: function() {
+        this.fire('DisconnectPressed', {serverId: this.serverId});
         this.fire('AddServerRequested', {serverConfig: this.serverConfig});
+        
         this.close();
       },
       _ignoreDetectedServer: function() {
