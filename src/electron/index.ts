@@ -213,8 +213,15 @@ function interceptShadowsocksLink(argv: string[]) {
         console.error('called with URL but mainWindow not open');
       }
     }
+    
     let subscribeArr = subscribeStr.split(/[\r\n]+/);
     
+    // if subscribeArr is not empty, then delete all servers to prepare to add the updated list
+    if (subscribeArr !== undefined && subscribeArr.length != 0 && subscribeArr[0].startsWith('ss://')) {
+      // delete all servers
+       mainWindow.webContents.send('delete-all-servers');
+    }
+
     subscribeArr.forEach(function (url) {
       const protocol = 'ss://';
       if (url.startsWith(protocol)) {
