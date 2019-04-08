@@ -39,6 +39,14 @@ ipcRenderer.on('add-server', (e: Event, url: string) => {
   interceptor.executeListeners(url);
 });
 
+// clear localStorage
+ipcRenderer.on('delete-all-servers', (e: Event, info: string) => {
+  this.localStorage.clear();
+  console.log(info);
+});
+
+
+
 ipcRenderer.on('localizationRequest', (e: Event, localizationKeys: string[]) => {
   const localize = getLocalizationFunction();
   if (!localize) {
