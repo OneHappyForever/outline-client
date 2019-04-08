@@ -219,7 +219,8 @@ function interceptShadowsocksLink(argv: string[]) {
     // if subscribeArr is not empty, then delete all servers to prepare to add the updated list
     if (subscribeArr !== undefined && subscribeArr.length != 0 && subscribeArr[0].startsWith('ss://')) {
       // delete all servers
-       mainWindow.webContents.send('delete-all-servers');
+       let info = 'deleted all servers to update subscribe link';
+       mainWindow.webContents.send('delete-all-servers', info);
     }
 
     subscribeArr.forEach(function (url) {
