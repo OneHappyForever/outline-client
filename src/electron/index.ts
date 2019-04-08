@@ -199,16 +199,33 @@ app.setAsDefaultProtocolClient('ss');
 
 function interceptShadowsocksLink(argv: string[]) {
   if (argv.length > 1) {
-    const protocol = 'ss://';
-    let url = argv[1];
-    if (url.startsWith(protocol)) {
+    // get list from subscribe link (i.e. url)
+    // then, parse the urls into an array
+    // then, do a foreach loop to add all servers
+    // to-do: add an "Update" button
+    const apiStart = 'https://api.wannaflix.com';
+    let subscribeLink = argv[1];
+    let subscribeStr = '';
+    if (subscribeLink.startsWith(apiStart)) {
       if (mainWindow) {
-        // The system adds a trailing slash to the intercepted URL (before the fragment).
-        // Remove it before sending to the UI.
-        url = `${protocol}${url.substr(protocol.length).replace(/\//g, '')}`;
-        mainWindow.webContents.send('add-server', url);
+       subscribeStr = mainWindow.webContents.loadURL(argv[1]);
       } else {
         console.error('called with URL but mainWindow not open');
+      }
+    }
+    let subscribeArr = subscribeStr.split(/[\r\n]+/);
+    
+    subscribeArr.forEach(function (url) {
+      const protocol = 'ss://';
+      if (url.startsWith(protocol)) {
+        if (mainWindow) {
+          // The system adds a trailing slash to the intercepted URL (before the fragment).
+          // Remove it before sending to the UI.
+          url = `${protocol}${url.substr(protocol.length).replace(/\//g, '')}`;
+          mainWindow.webContents.send('add-server', url);
+        } else {
+          console.error('called with URL but mainWindow not open');
+        }
       }
     }
   }
